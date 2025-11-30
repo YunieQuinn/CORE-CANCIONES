@@ -30,5 +30,10 @@
             </c:forEach>
         </tbody>
     </table>
+    <p>
+    <a href="${pageContext.request.contextPath}/canciones/formulario/agregar">
+        Agregar nueva canción
+    </a>
+</p>
 </body>
 </html>

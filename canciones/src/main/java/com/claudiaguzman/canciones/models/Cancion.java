@@ -12,6 +12,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+
 @Entity
 @Table(name = "canciones")
 public class Cancion {
@@ -19,10 +23,24 @@ public class Cancion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotBlank(message = "El título es obligatorio")
+    @Size(min = 5, message = "El título debe tener al menos 5 caracteres")
     private String titulo;
+
+    @NotBlank(message = "El artista es obligatorio")
+    @Size(min = 3, message = "El artista debe tener al menos 3 caracteres")
     private String artista;
+
+    @NotBlank(message = "El álbum es obligatorio")
+    @Size(min = 3, message = "El álbum debe tener al menos 3 caracteres")
     private String album;
+
+    @NotBlank(message = "El género es obligatorio")
+    @Size(min = 3, message = "El género debe tener al menos 3 caracteres")
     private String genero;
+
+    @NotBlank(message = "El idioma es obligatorio")
+    @Size(min = 3, message = "El idioma debe tener al menos 3 caracteres")
     private String idioma;
 
 
