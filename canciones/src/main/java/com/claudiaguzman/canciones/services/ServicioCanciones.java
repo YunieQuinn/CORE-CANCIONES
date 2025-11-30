@@ -17,11 +17,15 @@ public class ServicioCanciones {
         return repositorioCanciones.findAll();
     }
 
-    public Cancion obtenerCancionPorId(Long id) {
+    public Cancion obtenerCancionPorId(Long id){
         return repositorioCanciones.findById(id).orElse(null);
     }
 
-    public Cancion agregarCancion(Cancion cancion) {
+    public Cancion agregarCancion(Cancion cancion){
     return repositorioCanciones.save(cancion);
-}
+    }
+
+    public Cancion actualizaCancion(Cancion cancion){
+    return repositorioCanciones.save(cancion);
+    }
 }

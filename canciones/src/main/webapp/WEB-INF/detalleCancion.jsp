@@ -17,6 +17,12 @@
     <p><strong>Fecha actualización:</strong> ${cancion.fechaActualizacion}</p>
 
     <p>
+        <a href="${pageContext.request.contextPath}/canciones/formulario/editar/${cancion.id}">
+            Actualizar canción
+        </a>
+    </p>
+
+    <p>
         <a href="${pageContext.request.contextPath}/canciones">Volver a lista de canciones</a>
     </p>
 </body>

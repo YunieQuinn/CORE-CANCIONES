@@ -57,4 +57,28 @@ public class ControladorCanciones{
         servicioCanciones.agregarCancion(cancion);
         return "redirect:/canciones";
     }
+
+    @GetMapping("/canciones/formulario/editar/{idCancion}")
+    public String formularioEditarCancion(@PathVariable("idCancion") Long idCancion, Model modelo) {
+        Cancion cancion = servicioCanciones.obtenerCancionPorId(idCancion);
+        if (cancion == null) {
+            return "redirect:/canciones";
+        }
+        modelo.addAttribute("cancion", cancion);
+        return "editarCancion.jsp";
+    }
+
+    @PostMapping("/canciones/procesa/editar/{idCancion}")
+    public String procesarEditarCancion(
+            @PathVariable("idCancion") Long idCancion,
+            @Valid @ModelAttribute("cancion") Cancion cancion,
+            BindingResult resultadoValidacion) {
+        if (resultadoValidacion.hasErrors()) {
+            return "editarCancion.jsp";
+        }
+        // Como en el formulario no mostramos el id, lo tomamos de la URL
+        cancion.setId(idCancion);
+        servicioCanciones.actualizaCancion(cancion);
+        return "redirect:/canciones";
+    }
 }
