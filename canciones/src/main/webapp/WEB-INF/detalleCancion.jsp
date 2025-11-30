@@ -21,6 +21,12 @@
             Actualizar canción
         </a>
     </p>
+    <p>
+        <a href="${pageContext.request.contextPath}/canciones/eliminar/${cancion.id}"
+            onclick="return confirm('¿Estás segura de que quieres eliminar esta canción?');">
+            Eliminar canción
+        </a>
+    </p>
 
     <p>
         <a href="${pageContext.request.contextPath}/canciones">Volver a lista de canciones</a>
