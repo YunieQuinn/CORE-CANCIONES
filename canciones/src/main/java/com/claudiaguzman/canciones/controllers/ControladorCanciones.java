@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.claudiaguzman.canciones.models.Artista;
 import com.claudiaguzman.canciones.models.Cancion;
+import com.claudiaguzman.canciones.services.ServicioArtistas;
 import com.claudiaguzman.canciones.services.ServicioCanciones;
 
 import jakarta.validation.Valid;
@@ -20,6 +23,9 @@ import jakarta.validation.Valid;
 public class ControladorCanciones{
     @Autowired
     private ServicioCanciones servicioCanciones;
+
+    @Autowired
+    private ServicioArtistas servicioArtistas;
 
     @GetMapping("/canciones")
     public String desplegarCanciones(Model modelo) {
@@ -41,20 +47,31 @@ public class ControladorCanciones{
 
     // Mostrar formulario para agregar
     @GetMapping("/canciones/formulario/agregar")
-    public String formularioAgregarCancion(@ModelAttribute("cancion") Cancion cancion) {
+    public String formularioAgregarCancion(@ModelAttribute("cancion") Cancion cancion, Model modelo) {
+        modelo.addAttribute("artistas", servicioArtistas.obtenerTodosLosArtistas());
         return "agregarCancion.jsp";
     }
 
     // Procesar formulario
     @PostMapping("/canciones/procesa/agregar")
-    public String procesarAgregarCancion(
-            @Valid @ModelAttribute("cancion") Cancion cancion,
-            BindingResult resultadoValidacion) {
+    public String procesarAgregarCancion(@Valid @ModelAttribute("cancion") Cancion cancion,
+            BindingResult resultadoValidacion,
+            @RequestParam("artistaId") Long artistaId,
+            Model modelo) {
+
         if (resultadoValidacion.hasErrors()) {
-            // Volver al formulario con errores
+            modelo.addAttribute("artistas", servicioArtistas.obtenerTodosLosArtistas());
             return "agregarCancion.jsp";
         }
+        Artista artista = servicioArtistas.obtenerArtistaPorId(artistaId);
+        if (artista == null) {
+            resultadoValidacion.rejectValue("artista", null, "Debe seleccionar un artista válido");
+            modelo.addAttribute("artistas", servicioArtistas.obtenerTodosLosArtistas());
+            return "agregarCancion.jsp";
+        }
+        cancion.setArtista(artista);
         servicioCanciones.agregarCancion(cancion);
+
         return "redirect:/canciones";
     }
 
@@ -65,19 +82,30 @@ public class ControladorCanciones{
             return "redirect:/canciones";
         }
         modelo.addAttribute("cancion", cancion);
+        modelo.addAttribute("artistas", servicioArtistas.obtenerTodosLosArtistas());
         return "editarCancion.jsp";
     }
 
     @PostMapping("/canciones/procesa/editar/{idCancion}")
     public String procesarEditarCancion(
-            @PathVariable("idCancion") Long idCancion,
-            @Valid @ModelAttribute("cancion") Cancion cancion,
-            BindingResult resultadoValidacion) {
+        @PathVariable("idCancion") Long idCancion,
+        @Valid @ModelAttribute("cancion") Cancion cancion,
+        BindingResult resultadoValidacion,
+        @RequestParam("artistaId") Long artistaId,
+        Model modelo) {
+
         if (resultadoValidacion.hasErrors()) {
+            modelo.addAttribute("artistas", servicioArtistas.obtenerTodosLosArtistas());
+            return "editarCancion.jsp"; 
+        }
+        Artista artista = servicioArtistas.obtenerArtistaPorId(artistaId);
+        if (artista == null) {
+            resultadoValidacion.rejectValue("artista", null, "Debe seleccionar un artista válido");
+            modelo.addAttribute("artistas", servicioArtistas.obtenerTodosLosArtistas());
             return "editarCancion.jsp";
         }
-        // Como en el formulario no mostramos el id, lo tomamos de la URL
         cancion.setId(idCancion);
+        cancion.setArtista(artista);      
         servicioCanciones.actualizaCancion(cancion);
         return "redirect:/canciones";
     }

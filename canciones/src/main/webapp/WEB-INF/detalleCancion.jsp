@@ -9,7 +9,11 @@
 
     <p><strong>ID:</strong> ${cancion.id}</p>
     <p><strong>Título:</strong> ${cancion.titulo}</p>
-    <p><strong>Artista:</strong> ${cancion.artista}</p>
+    <p><strong>Artista:</strong> 
+        <a href="${pageContext.request.contextPath}/artistas/detalle/${cancion.artista.id}">
+            ${cancion.artista.nombre} ${cancion.artista.apellido}
+        </a>
+    </p>
     <p><strong>Álbum:</strong> ${cancion.album}</p>
     <p><strong>Género:</strong> ${cancion.genero}</p>
     <p><strong>Idioma:</strong> ${cancion.idioma}</p>
